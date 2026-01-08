@@ -10,7 +10,7 @@ This Shopify app is deployed on Vercel at: https://size-chart-virid.vercel.app/
 
 ## Environment Variables
 
-Configure these in Vercel Dashboard → Settings → Environment Variables:
+⚠️ **IMPORTANT**: Configure these in Vercel Dashboard → Settings → Environment Variables **BEFORE** deploying:
 
 ### Required Variables
 
@@ -21,7 +21,9 @@ SHOPIFY_API_SECRET=your_api_secret
 SCOPES=write_products,read_products,write_orders,read_orders,write_customers,read_customers
 SHOPIFY_APP_URL=https://size-chart-virid.vercel.app
 
-# Database (PostgreSQL)
+# Database (PostgreSQL) - REQUIRED FOR BUILD
+# Even if database is not ready, set a placeholder for build to succeed
+# Format: postgresql://user:password@host:port/database
 DATABASE_URL=postgresql://user:password@host:port/database
 
 # AWS S3 (for image storage)
@@ -44,10 +46,10 @@ SHOPIFY_API_VERSION=2024-10
 ## Build Configuration
 
 The project uses:
-- **Build Command**: `npm run build && npm run setup`
+- **Build Command**: `npm run vercel-build`
+  - Generates Prisma client (uses placeholder DATABASE_URL if not set)
   - Builds React Router app
-  - Generates Prisma client
-  - Runs database migrations
+  - Note: Database migrations are NOT run during build (run separately via `/api/migrate` endpoint)
 
 - **Output Directory**: `build/client`
   - Static assets served by Vercel
@@ -64,17 +66,20 @@ The project uses:
 
 1. Go to Vercel Dashboard → Storage → Create Database → Postgres
 2. Copy the `DATABASE_URL` connection string
-3. Add it to Environment Variables
-4. Run migrations:
+3. Add it to Environment Variables in Vercel Dashboard
+4. After deployment, run migrations by calling:
    ```bash
-   npx prisma migrate deploy
+   curl -X POST https://size-chart-virid.vercel.app/api/migrate \
+     -H "X-Migration-Token: your_migration_token" \
+     -H "Content-Type: application/json"
    ```
+   Or set `MIGRATION_TOKEN` in environment variables and use it for authentication.
 
 ### Using External PostgreSQL
 
 1. Create PostgreSQL database
 2. Add `DATABASE_URL` to Vercel Environment Variables
-3. Run migrations manually or via Vercel build command
+3. After deployment, run migrations via the `/api/migrate` endpoint or manually
 
 ## Deployment Steps
 
