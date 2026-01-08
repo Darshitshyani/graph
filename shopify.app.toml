@@ -2,7 +2,7 @@
 
 client_id = "a69fde9cc263a70744bd4dc448f53740"
 name = "size chart"
-application_url = "https://example.com"
+application_url = "https://graph-sigma-ten.vercel.app"
 embedded = true
 
 [build]
@@ -24,4 +24,4 @@ api_version = "2026-01"
 scopes = "read_orders,read_products,write_orders,write_products,write_draft_orders,read_customers"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [ "https://graph-sigma-ten.vercel.app/auth" ]

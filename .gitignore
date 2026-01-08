@@ -131,11 +131,6 @@ temp/
 .dockerignore
 docker-compose.override.yml
 
-# Vercel
-.vercel
-.vercel/*
-vercel.json.bak
-
 # Misc
 *.bak
 *.swp
