@@ -1723,14 +1723,13 @@ const CreateChart = ({ open, onClose, onSave, initialData = null }) => {
                           width: "100%",
                           height: '250px',
                          
-                           marginBottom:"10px",
-                          alignItems: 'center',
-                          justifyItems: 'center',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          overflow: 'hidden',
-                          position: 'relative',
+                          marginBottom:"10px",
+                         justifyItems: 'center',
+                         display: 'flex',
+                         alignItems: 'center',
+                         justifyContent: 'center',
+                         overflow: 'hidden',
+                         position: 'relative',
                         }}
                       >
                          <Box

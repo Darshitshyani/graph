@@ -1,4 +1,3 @@
-import { sessionStorage, apiVersion } from "../shopify.server";
 import prisma from "../db.server";
 
 // CORS headers helper
