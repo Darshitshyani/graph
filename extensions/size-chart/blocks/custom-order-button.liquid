@@ -1,0 +1,430 @@
+{% comment %}
+  Block 2: Custom Order Button
+  Displays a button that opens the custom measurement form modal
+  Only shows if a custom size (measurement) template is assigned to the product
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Custom Order Button",
+  "target": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Check Size Chart"
+    },
+    {
+      "type": "select",
+      "id": "button_size",
+      "label": "Button Size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "button_width",
+      "label": "Button Width",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto"
+        },
+        {
+          "value": "fill",
+          "label": "Full Width"
+        }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "label": "Padding Right",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "label": "Padding Left",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color (All Sides)",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border Width (All Sides)",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Individual Borders"
+    },
+    {
+      "type": "color",
+      "id": "border_top_color",
+      "label": "Top Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "border_top_width",
+      "label": "Top Border Width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "border_bottom_color",
+      "label": "Bottom Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "border_bottom_width",
+      "label": "Bottom Border Width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 2,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "border_left_color",
+      "label": "Left Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "border_left_width",
+      "label": "Left Border Width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "border_right_color",
+      "label": "Right Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "border_right_width",
+      "label": "Right Border Width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border Radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "icon_type",
+      "label": "Icon Type",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "check",
+          "label": "Check"
+        },
+        {
+          "value": "arrow-right",
+          "label": "Arrow Right"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "icon_position",
+      "label": "Icon Position",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Button Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Font Family",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "app_url",
+      "label": "App URL",
+      "info": "Leave empty to auto-detect. Enter your app URL if auto-detection fails."
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  // Set shop domain and app URL for size-chart-sync.js
+  window.Shopify = window.Shopify || {};
+  window.Shopify.shop = '{{ shop.permanent_domain }}';
+  
+  {% if block.settings.app_url != blank %}
+    // Set app URL from block settings
+    window.sizeChartAppUrl = '{{ block.settings.app_url }}';
+  {% endif %}
+</script>
+
+<script src="{{ 'size-chart-sync.js' | asset_url }}" defer></script>
+
+<div 
+  class="custom-order-button-block" 
+  data-shop="{{ shop.permanent_domain }}"
+  data-product-id="{{ product.id }}"
+  data-template-type="custom"
+  style="
+    display: none;
+    align-items: center;
+    justify-content: {{ block.settings.alignment | default: 'center' }};
+    margin-top: {{ block.settings.margin_top | default: 20 }}px;
+    margin-bottom: {{ block.settings.margin_bottom | default: 20 }}px;
+  "
+  data-chart-check-pending="true"
+>
+  <button
+    type="button"
+    class="size-chart-button custom-order-button"
+    data-product-id="{{ product.id }}"
+    data-template-type="custom"
+    style="
+      background-color: {{ block.settings.background_color | default: '#ffffff' }};
+      color: {{ block.settings.text_color | default: '#000000' }};
+      {% if block.settings.border_top_width > 0 or block.settings.border_bottom_width > 0 or block.settings.border_left_width > 0 or block.settings.border_right_width > 0 %}
+        {% assign top_color = block.settings.border_top_color | default: block.settings.border_color %}
+        {% assign bottom_color = block.settings.border_bottom_color | default: block.settings.border_color %}
+        {% assign left_color = block.settings.border_left_color | default: block.settings.border_color %}
+        {% assign right_color = block.settings.border_right_color | default: block.settings.border_color %}
+        border-top: {{ block.settings.border_top_width | default: 0 }}px solid {{ top_color }};
+        border-bottom: {{ block.settings.border_bottom_width | default: 0 }}px solid {{ bottom_color }};
+        border-left: {{ block.settings.border_left_width | default: 0 }}px solid {{ left_color }};
+        border-right: {{ block.settings.border_right_width | default: 0 }}px solid {{ right_color }};
+      {% else %}
+        border: {{ block.settings.border_width | default: 0 }}px solid {{ block.settings.border_color | default: '#000000' }};
+      {% endif %}
+      border-radius: {{ block.settings.border_radius | default: 8 }}px;
+      {% if block.settings.button_width == 'fill' %}width: 100%;{% else %}width: auto;{% endif %}
+      padding-top: {{ block.settings.padding_top | default: 8 }}px;
+      padding-right: {{ block.settings.padding_right | default: 16 }}px;
+      padding-bottom: {{ block.settings.padding_bottom | default: 8 }}px;
+      padding-left: {{ block.settings.padding_left | default: 16 }}px;
+      font-size: {{ block.settings.font_size | default: 16 }}px;
+      {% if block.settings.font_family != blank %}
+        font-family: {{ block.settings.font_family.family }}, {{ block.settings.font_family.fallback_families }};
+        font-weight: {{ block.settings.font_family.weight }};
+        font-style: {{ block.settings.font_family.style }};
+      {% else %}
+        font-family: inherit;
+        font-weight: 600;
+        font-style: inherit;
+      {% endif %}
+      letter-spacing: inherit;
+      text-transform: inherit;
+      cursor: pointer;
+      transition: opacity 0.2s, background-color 0.2s;
+      display: inline-flex;
+      {% if block.settings.icon_position == 'top' %}
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      {% else %}
+        flex-direction: row;
+        align-items: center;
+        justify-content: {% if block.settings.text_align == 'left' %}flex-start{% elsif block.settings.text_align == 'right' %}flex-end{% else %}center{% endif %};
+        gap: 8px;
+      {% endif %}
+      white-space: nowrap;
+    "
+    onmouseover="this.style.opacity='0.9'"
+    onmouseout="this.style.opacity='1'"
+  >
+    {% if block.settings.icon_type != 'none' and block.settings.icon_position == 'top' %}
+      {% render 'size-chart-icon', icon_type: block.settings.icon_type, font_size: block.settings.font_size %}
+    {% endif %}
+    {% if block.settings.icon_type != 'none' and block.settings.icon_position == 'left' %}
+      {% render 'size-chart-icon', icon_type: block.settings.icon_type, font_size: block.settings.font_size %}
+    {% endif %}
+    <span>{{ block.settings.button_text | default: 'Check Size Chart' }}</span>
+    {% if block.settings.icon_type != 'none' and block.settings.icon_position == 'right' %}
+      {% render 'size-chart-icon', icon_type: block.settings.icon_type, font_size: block.settings.font_size %}
+    {% endif %}
+  </button>
+</div>
+

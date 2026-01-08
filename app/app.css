@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Full width layout overrides - Remove all centering */
+/* AppProvider and wrapper overrides */
+[data-app-provider],
+[class*="app-provider"],
+[class*="AppProvider"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+/* s-page component overrides */
+s-page {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+s-page > *,
+s-page::part(content),
+s-page [slot="content"],
+s-page::part(container) {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Remove any max-width and centering from dashboard containers */
+s-page div,
+s-page > div,
+s-page [class*="container"] {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Ensure full width for all containers */
+.w-full,
+table,
+.grid {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}

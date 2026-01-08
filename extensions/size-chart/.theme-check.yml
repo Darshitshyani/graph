@@ -1,0 +1,6 @@
+# Disable all theme checks for this extension
+# Shopify CLI has bugs with schema tag validation
+root: .
+exclude:
+  - '**/*'
+

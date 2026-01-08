@@ -1,0 +1,357 @@
+{% comment %}
+  Dynamic Size Chart Buttons Snippet
+  Shows buttons based on assigned template types:
+  - "Size Chart" button → Shows when table template is assigned
+  - "Add Custom Size" button → Shows when custom measurement template is assigned
+  - BOTH buttons side-by-side → Shows when BOTH templates are assigned to the same product
+  - No buttons → Shows when no templates are assigned
+  
+  Button Logic:
+  - Each button is completely independent
+  - Clicking "Size Chart" opens the table template modal
+  - Clicking "Add Custom Size" opens the custom measurement template modal
+  
+  Usage: {% render 'size-chart-buttons', product: product, app_url: app_url %}
+  
+  Parameters:
+  - product (optional): The product object (defaults to current product)
+  - app_url (optional): Your app URL (auto-detected if not provided)
+{% endcomment %}
+
+{% comment %} Use product parameter if provided, otherwise use context product {% endcomment %}
+{% assign current_product = product %}
+{% comment %} Extract product ID - handle both GID format (gid://shopify/Product/123) and numeric format {% endcomment %}
+{% if current_product.id contains 'gid://' %}
+  {% assign product_id = current_product.id | split: '/' | last %}
+{% elsif current_product.id contains '/' %}
+  {% assign product_id = current_product.id | split: '/' | last %}
+{% else %}
+  {% assign product_id = current_product.id %}
+{% endif %}
+
+<script>
+  // Set shop domain and app URL for size-chart-sync.js
+  window.Shopify = window.Shopify || {};
+  window.Shopify.shop = '{{ shop.permanent_domain }}';
+  
+  {% if app_url != blank %}
+    window.sizeChartAppUrl = '{{ app_url }}';
+  {% endif %}
+</script>
+
+<script src="{{ 'size-chart-sync.js' | asset_url }}" defer></script>
+
+<div 
+  class="size-chart-buttons-container" 
+  data-shop="{{ shop.permanent_domain }}"
+  data-product-id="{{ product_id }}"
+  style="
+    display: none;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
+  "
+  data-template-types-checked="false"
+>
+  {% comment %} Size Chart Button (for table templates) - Shows when table template is assigned {% endcomment %}
+  <div 
+    class="size-chart-table-button-wrapper" 
+    data-product-id="{{ product_id }}"
+    data-button-type="table"
+    style="display: none;"
+  >
+    <button
+      type="button"
+      class="size-chart-button size-chart-table-button"
+      data-product-id="{{ product_id }}"
+      data-template-type="table"
+      aria-label="View Size Chart"
+      style="
+        background-color: #ffffff;
+        color: #000000;
+        border: 2px solid #000000;
+        border-radius: 0px;
+        padding: 8px 16px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+      "
+      onmouseover="this.style.opacity='0.9'"
+      onmouseout="this.style.opacity='1'"
+    >
+      <span>Size Chart</span>
+    </button>
+  </div>
+
+  {% comment %} Add Custom Size Button (for custom measurement templates) - Shows when custom template is assigned {% endcomment %}
+  <div 
+    class="size-chart-custom-button-wrapper" 
+    data-product-id="{{ product_id }}"
+    data-button-type="custom"
+    style="display: none;"
+  >
+    <button
+      type="button"
+      class="size-chart-button size-chart-custom-button"
+      data-product-id="{{ product_id }}"
+      data-template-type="custom"
+      aria-label="Add Custom Size"
+      style="
+        background-color: #ffffff;
+        color: #000000;
+        border: 2px solid #000000;
+        border-radius: 0px;
+        padding: 8px 16px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+      "
+      onmouseover="this.style.opacity='0.9'"
+      onmouseout="this.style.opacity='1'"
+    >
+      <span>Add Custom Size</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  (function() {
+    'use strict';
+    
+    const container = document.querySelector('.size-chart-buttons-container[data-product-id="{{ product_id }}"]');
+    if (!container) return;
+    
+    const shopDomain = '{{ shop.permanent_domain }}';
+    const productId = '{{ product_id }}';
+    
+    console.log('[Size Chart Buttons] Initialized for product:', productId, 'shop:', shopDomain);
+    
+    // Get app URL - check window.sizeChartAppUrl first, then try API
+    async function getAppUrl() {
+      if (window.sizeChartAppUrl) {
+        return window.sizeChartAppUrl;
+      }
+      
+      // Try to get from theme settings API
+      const apiEndpoints = [
+        `/apps/size-chart/api/theme-settings/public?shop=${encodeURIComponent(shopDomain)}`,
+        `https://${shopDomain}/apps/size-chart/api/theme-settings/public?shop=${encodeURIComponent(shopDomain)}`,
+      ];
+      
+      for (const apiUrl of apiEndpoints) {
+        try {
+          const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' },
+            mode: 'cors',
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            const appUrl = data.settings?.appUrl || data.appUrl;
+            if (appUrl && appUrl.trim()) {
+              return appUrl.trim();
+            }
+          }
+        } catch (error) {
+          console.warn('[Size Chart Buttons] Failed to fetch app URL:', error);
+        }
+      }
+      
+      return null;
+    }
+    
+    // Normalize URL
+    function normalizeUrl(url) {
+      if (!url || url.trim() === '') return null;
+      url = url.trim();
+      if (url.match(/^https?:\/\//i)) return url;
+      if (url.startsWith('//')) return 'https:' + url;
+      return 'https://' + url;
+    }
+    
+    // Check template types and show/hide buttons
+    async function checkTemplateTypes() {
+      if (container.dataset.templateTypesChecked === 'true') {
+        return;
+      }
+      
+      const appUrl = normalizeUrl(await getAppUrl());
+      if (!appUrl) {
+        console.warn('[Size Chart Buttons] App URL not available, buttons will not be shown');
+        container.style.display = 'none';
+        return;
+      }
+      
+      console.log('[Size Chart Buttons] Checking template types for product:', productId, 'using app URL:', appUrl);
+      
+      // Determine API URL
+      const isAppProxy = appUrl.includes('/apps/');
+      let apiUrl;
+      
+      if (isAppProxy) {
+        const urlParts = appUrl.replace(/^https?:\/\//, '').split('/apps/');
+        const shopDomainFromUrl = urlParts[0];
+        const appHandle = urlParts[1]?.split('/')[0] || 'size-chart';
+        apiUrl = `https://${shopDomainFromUrl}/apps/${appHandle}/api/size-chart-types/public?shop=${encodeURIComponent(shopDomain)}&productId=${encodeURIComponent(productId)}`;
+      } else {
+        const apiPath = appUrl.endsWith('/') ? 'api/size-chart-types/public' : '/api/size-chart-types/public';
+        apiUrl = `${appUrl}${apiPath}?shop=${encodeURIComponent(shopDomain)}&productId=${encodeURIComponent(productId)}`;
+      }
+      
+      try {
+        console.log('[Size Chart Buttons] Fetching from:', apiUrl);
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' },
+          mode: 'cors',
+        });
+        
+        console.log('[Size Chart Buttons] Response status:', response.status, response.statusText);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('[Size Chart Buttons] API error:', response.status, errorText);
+          container.style.display = 'none';
+          return;
+        }
+        
+        const data = await response.json();
+        console.log('[Size Chart Buttons] API response data:', JSON.stringify(data));
+        
+        const hasTableTemplate = data.hasTableTemplate === true;
+        const hasCustomTemplate = data.hasCustomTemplate === true;
+        
+        console.log('[Size Chart Buttons] Parsed template types:', {
+          hasTableTemplate,
+          hasCustomTemplate,
+          rawData: data
+        });
+        
+        // Show/hide buttons based on template types
+        const tableButtonWrapper = container.querySelector('.size-chart-table-button-wrapper');
+        const customButtonWrapper = container.querySelector('.size-chart-custom-button-wrapper');
+        
+        console.log('[Size Chart Buttons] Button wrappers found:', {
+          tableButtonWrapper: !!tableButtonWrapper,
+          customButtonWrapper: !!customButtonWrapper
+        });
+        
+        // Show table button if table template exists
+        if (hasTableTemplate) {
+          if (tableButtonWrapper) {
+            tableButtonWrapper.style.display = 'block';
+            console.log('[Size Chart Buttons] ✓ Showing table button (hasTableTemplate=true)');
+          } else {
+            console.error('[Size Chart Buttons] ✗ Table button wrapper not found!');
+          }
+        } else {
+          if (tableButtonWrapper) {
+            tableButtonWrapper.style.display = 'none';
+            console.log('[Size Chart Buttons] Hiding table button (hasTableTemplate=false)');
+          }
+        }
+        
+        // Show custom button if custom template exists
+        if (hasCustomTemplate) {
+          if (customButtonWrapper) {
+            customButtonWrapper.style.display = 'block';
+            console.log('[Size Chart Buttons] ✓ Showing custom button (hasCustomTemplate=true)');
+          } else {
+            console.error('[Size Chart Buttons] ✗ Custom button wrapper not found!');
+          }
+        } else {
+          if (customButtonWrapper) {
+            customButtonWrapper.style.display = 'none';
+            console.log('[Size Chart Buttons] Hiding custom button (hasCustomTemplate=false)');
+          }
+        }
+        
+        // Show container if at least one template exists
+        if (hasTableTemplate || hasCustomTemplate) {
+          container.style.display = 'flex';
+          // Always use row layout for buttons (they'll be side-by-side when both exist)
+          container.style.flexDirection = 'row';
+          container.style.justifyContent = 'center';
+          container.style.alignItems = 'center';
+          container.style.gap = '12px';
+          container.style.flexWrap = 'wrap';
+          
+          console.log('[Size Chart Buttons] Container displayed with buttons:', {
+            table: hasTableTemplate,
+            custom: hasCustomTemplate
+          });
+        } else {
+          container.style.display = 'none';
+          console.log('[Size Chart Buttons] No templates found, hiding container');
+        }
+        
+        // Force visibility check
+        const tableVisible = tableButtonWrapper && tableButtonWrapper.style.display === 'block';
+        const customVisible = customButtonWrapper && customButtonWrapper.style.display === 'block';
+        
+        console.log('[Size Chart Buttons] ===== FINAL STATE =====');
+        console.log('[Size Chart Buttons] API Response:', {
+          hasTableTemplate,
+          hasCustomTemplate
+        });
+        console.log('[Size Chart Buttons] Button Visibility:', {
+          tableButtonVisible: tableVisible,
+          customButtonVisible: customVisible,
+          tableButtonDisplay: tableButtonWrapper?.style.display,
+          customButtonDisplay: customButtonWrapper?.style.display
+        });
+        console.log('[Size Chart Buttons] Container:', {
+          containerVisible: container.style.display !== 'none',
+          containerDisplay: container.style.display,
+          containerFlexDirection: container.style.flexDirection
+        });
+        console.log('[Size Chart Buttons] ========================');
+        
+        // Double-check: if API says both exist but buttons aren't visible, force them
+        if (hasTableTemplate && hasCustomTemplate) {
+          if (!tableVisible || !customVisible) {
+            console.warn('[Size Chart Buttons] WARNING: Both templates detected but buttons not visible! Forcing display...');
+            if (tableButtonWrapper) tableButtonWrapper.style.display = 'block';
+            if (customButtonWrapper) customButtonWrapper.style.display = 'block';
+            container.style.display = 'flex';
+          }
+        }
+        
+        container.dataset.templateTypesChecked = 'true';
+        
+        // Store template types for button click handlers
+        container.dataset.hasTableTemplate = hasTableTemplate ? 'true' : 'false';
+        container.dataset.hasCustomTemplate = hasCustomTemplate ? 'true' : 'false';
+      } catch (error) {
+        console.error('[Size Chart Buttons] Error checking template types:', error);
+        container.style.display = 'none';
+      }
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkTemplateTypes);
+    } else {
+      checkTemplateTypes();
+    }
+    
+    // Wait for size-chart-sync.js to load and attach click handlers
+    // The existing click handlers in size-chart-sync.js will handle both buttons
+    // since they both have the .size-chart-button class
+  })();
+</script>
+

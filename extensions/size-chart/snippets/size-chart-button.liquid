@@ -1,0 +1,72 @@
+{% comment %}
+  Size Chart Button Snippet
+  This snippet displays a size chart button that can be customized from the Theme Integration page
+  
+  Usage: {% render 'size-chart-button', app_url: 'https://your-app-url.com', product: product %}
+  
+  Parameters:
+  - app_url (required): Your app URL
+  - product (optional): The product object (defaults to current product)
+{% endcomment %}
+
+<script>
+  // Set shop domain and app URL for size-chart-sync.js
+  window.Shopify = window.Shopify || {};
+  window.Shopify.shop = '{{ shop.permanent_domain }}';
+  
+  {% if app_url != blank %}
+    // Set app URL from parameter
+    window.sizeChartAppUrl = '{{ app_url }}';
+  {% endif %}
+</script>
+
+<script src="{{ 'size-chart-sync.js' | asset_url }}" defer></script>
+
+<div 
+  class="size-chart-button-container" 
+  data-shop="{{ shop.permanent_domain }}"
+  style="
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+  "
+>
+  <button
+    type="button"
+    class="size-chart-button"
+    data-product-id="{{ product.id }}"
+    style="
+      background-color: {{ block.settings.background_color | default: '#ffffff' }};
+      color: {{ block.settings.text_color | default: '#000000' }};
+      border: 2px solid {{ block.settings.border_color | default: '#000000' }};
+      border-radius: {{ block.settings.border_radius | default: 0 }}px;
+      {% if block.settings.button_width == 'fill' %}width: 100%;{% else %}width: auto;{% endif %}
+      {% if block.settings.button_size == 'small' %}padding: 6px 12px; font-size: 14px;{% endif %}
+      {% if block.settings.button_size == 'medium' %}padding: 8px 16px; font-size: 16px;{% endif %}
+      {% if block.settings.button_size == 'large' %}padding: 12px 24px; font-size: 18px;{% endif %}
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    "
+    onmouseover="this.style.opacity='0.9'"
+    onmouseout="this.style.opacity='1'"
+  >
+    {% if block.settings.icon_type != 'none' and block.settings.icon_position == 'left' %}
+      {% render 'size-chart-icon', icon_type: block.settings.icon_type %}
+    {% endif %}
+    
+    <span>{{ block.settings.button_text | default: 'Size Chart' }}</span>
+    
+    {% if block.settings.icon_type != 'none' and block.settings.icon_position == 'right' %}
+      {% render 'size-chart-icon', icon_type: block.settings.icon_type %}
+    {% endif %}
+  </button>
+</div>
+
+{% comment %}
+  Note: Snippets don't have schema tags. 
+  Styling will be controlled by the Theme Integration settings in the app admin.
+{% endcomment %}

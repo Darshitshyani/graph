@@ -1,0 +1,109 @@
+{% comment %}
+  Size Chart App Embed
+  This App Embed injects the size chart functionality globally on storefront pages
+  It can display a floating button or automatically show on product pages
+  
+  App Embeds use target: "body" to inject scripts that can overlay on any page
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Size Chart App Embed",
+  "target": "body",
+  "javascript": "size-chart-embed.js",
+  "stylesheet": "size-chart-embed.css",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_embed",
+      "label": "Enable Size Chart App Embed",
+      "default": true,
+      "info": "Enable or disable the size chart functionality globally"
+    },
+    {
+      "type": "select",
+      "id": "display_mode",
+      "label": "Display Mode",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto (Show on product pages only)"
+        },
+        {
+          "value": "floating",
+          "label": "Floating Button (All pages)"
+        },
+        {
+          "value": "hidden",
+          "label": "Hidden (Manual trigger only)"
+        }
+      ],
+      "default": "auto",
+      "info": "How the size chart should be displayed"
+    },
+    {
+      "type": "text",
+      "id": "app_url",
+      "label": "App URL",
+      "info": "Leave empty to auto-detect. Enter your app URL if auto-detection fails."
+    },
+    {
+      "type": "header",
+      "content": "Floating Button Settings (if using floating mode)"
+    },
+    {
+      "type": "select",
+      "id": "floating_position",
+      "label": "Floating Button Position",
+      "options": [
+        {
+          "value": "bottom-right",
+          "label": "Bottom Right"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom Left"
+        },
+        {
+          "value": "top-right",
+          "label": "Top Right"
+        },
+        {
+          "value": "top-left",
+          "label": "Top Left"
+        }
+      ],
+      "default": "bottom-right",
+      "info": "Only applies when Display Mode is set to 'Floating Button'"
+    },
+    {
+      "type": "text",
+      "id": "floating_button_text",
+      "label": "Floating Button Text",
+      "default": "Size Chart"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  // Initialize size chart embed configuration
+  window.SizeChartEmbed = window.SizeChartEmbed || {};
+  window.SizeChartEmbed.config = {
+    enabled: {{ block.settings.enable_embed | json }},
+    displayMode: {{ block.settings.display_mode | json }},
+    appUrl: {{ block.settings.app_url | json }},
+    floatingPosition: {{ block.settings.floating_position | json }},
+    floatingButtonText: {{ block.settings.floating_button_text | json }},
+    shop: {{ shop.permanent_domain | json }}
+  };
+  
+  // Set shop domain for size-chart-sync.js compatibility
+  window.Shopify = window.Shopify || {};
+  window.Shopify.shop = {{ shop.permanent_domain | json }};
+  
+  {% if block.settings.app_url != blank %}
+    window.sizeChartAppUrl = {{ block.settings.app_url | json }};
+  {% endif %}
+</script>
+

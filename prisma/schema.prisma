@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id            String    @id
+  shop          String
+  state         String
+  isOnline      Boolean   @default(false)
+  scope         String?
+  expires       DateTime?
+  accessToken   String
+  userId        BigInt?
+  firstName     String?
+  lastName      String?
+  email         String?
+  accountOwner  Boolean   @default(false)
+  locale        String?
+  collaborator  Boolean?  @default(false)
+  emailVerified Boolean?  @default(false)
+}
+
+model SizeChartProductAssignment {
+  id                String            @id @default(uuid())
+  templateId        String
+  shop              String
+  productId         String
+  productTitle      String
+  createdAt         DateTime          @default(now())
+  SizeChartTemplate SizeChartTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@unique([templateId, productId])
+  @@index([productId])
+  @@index([shop])
+}
+
+model SizeChartTemplate {
+  id                         String                       @id @default(uuid())
+  shop                       String
+  name                       String
+  gender                     String
+  category                   String?
+  description                String?
+  chartData                  String
+  active                     Boolean                      @default(true)
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime                     @updatedAt
+  SizeChartProductAssignment SizeChartProductAssignment[]
+
+  @@index([active])
+  @@index([shop])
+}
+
+model ThemeSettings {
+  id              String   @id @default(uuid())
+  shop            String   @unique
+  buttonText      String   @default("Size Chart")
+  buttonSize      String   @default("large")
+  buttonWidth     String   @default("fit")
+  alignment       String   @default("center")
+  buttonType      String   @default("primary")
+  iconType        String   @default("none")
+  iconPosition    String   @default("left")
+  backgroundColor String   @default("#ffffff")
+  borderColor     String   @default("#000000")
+  textColor       String   @default("#000000")
+  borderRadius    Int      @default(0)
+  marginTop       Int      @default(20)
+  marginBottom    Int      @default(20)
+  marginLeft      Int      @default(20)
+  marginRight     Int      @default(20)
+  appUrl          String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([shop])
+}
+
+model Subscription {
+  id                String    @id @default(uuid())
+  shop              String    @unique
+  planId            String
+  planName           String    @default("free") // free, basic, pro, enterprise
+  status             String    @default("active") // active, cancelled, expired, trial
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd Boolean   @default(false)
+  trialEndsAt        DateTime?
+  features           String?   // JSON string of enabled features
+  limits             String?   // JSON string of plan limits (e.g., maxTemplates, maxProducts)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  Plan               Plan      @relation(fields: [planId], references: [id])
+
+  @@index([shop])
+  @@index([planId])
+  @@index([status])
+}
+
+model Plan {
+  id          String         @id @default(uuid())
+  name        String         @unique // free, basic, pro, enterprise
+  displayName String
+  price       Float          @default(0)
+  currency    String         @default("USD")
+  interval    String         @default("month") // month, year
+  features    String         // JSON string of features
+  limits      String         // JSON string of limits
+  active      Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  subscriptions Subscription[]
+
+  @@index([name])
+  @@index([active])
+}

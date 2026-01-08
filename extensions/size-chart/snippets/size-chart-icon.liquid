@@ -1,0 +1,97 @@
+{% comment %}
+  Size Chart Icon Snippet
+  Renders different icon types for the size chart button
+  Icons match the Theme Integration page icons (Tabler icons)
+{% endcomment %}
+
+{% assign base_font_size = font_size | default: 16 %}
+{% assign icon_size = base_font_size | times: 1.8 | round %}
+{% assign icon_size_px = icon_size | append: 'px' %}
+
+{% case icon_type %}
+  {% when 'arrow-right' %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: {{ icon_size_px }}; height: {{ icon_size_px }}; display: inline-block; vertical-align: middle; flex-shrink: 0;">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M17 3l4 4l-14 14l-4 -4z" />
+      <path d="M16 7l-1.5 -1.5" />
+      <path d="M13 10l-1.5 -1.5" />
+      <path d="M10 13l-1.5 -1.5" />
+      <path d="M7 16l-1.5 -1.5" />
+    </svg>
+  {% when 'arrow-left' %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: {{ icon_size_px }}; height: {{ icon_size_px }}; display: inline-block; vertical-align: middle; flex-shrink: 0;">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M12.03 7.97l4.97 -4.97l4 4l-5 5m-2 2l-7 7l-4 -4l7 -7" />
+      <path d="M16 7l-1.5 -1.5" />
+      <path d="M10 13l-1.5 -1.5" />
+      <path d="M7 16l-1.5 -1.5" />
+      <path d="M3 3l18 18" />
+    </svg>
+  {% when 'check' %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: {{ icon_size_px }}; height: {{ icon_size_px }}; display: inline-block; vertical-align: middle; flex-shrink: 0;">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M5 4h14a1 1 0 0 1 1 1v5a1 1 0 0 1 -1 1h-7a1 1 0 0 0 -1 1v7a1 1 0 0 1 -1 1h-5a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1" />
+      <path d="M4 8l2 0" />
+      <path d="M4 12l3 0" />
+      <path d="M4 16l2 0" />
+      <path d="M8 4l0 2" />
+      <path d="M12 4l0 3" />
+      <path d="M16 4l0 2" />
+    </svg>
+  {% when 'plus' %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: {{ icon_size_px }}; height: {{ icon_size_px }}; display: inline-block; vertical-align: middle; flex-shrink: 0;">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M12 19.875c0 .621 -.512 1.125 -1.143 1.125h-5.714a1.134 1.134 0 0 1 -1.143 -1.125v-15.875a1 1 0 0 1 1 -1h5.857c.631 0 1.143 .504 1.143 1.125z" />
+      <path d="M12 9h-2" />
+      <path d="M12 6h-3" />
+      <path d="M12 12h-3" />
+      <path d="M12 18h-3" />
+      <path d="M12 15h-2" />
+      <path d="M21 3h-4" />
+      <path d="M19 3v18" />
+      <path d="M21 21h-4" />
+    </svg>
+  {% when 'x' %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: {{ icon_size_px }}; height: {{ icon_size_px }}; display: inline-block; vertical-align: middle; flex-shrink: 0;">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M19.875 12c.621 0 1.125 .512 1.125 1.143v5.714c0 .631 -.504 1.143 -1.125 1.143h-15.875a1 1 0 0 1 -1 -1v-5.857c0 -.631 .504 -1.143 1.125 -1.143h15.75z" />
+      <path d="M9 12v2" />
+      <path d="M6 12v3" />
+      <path d="M12 12v3" />
+      <path d="M18 12v3" />
+      <path d="M15 12v2" />
+      <path d="M3 3v4" />
+      <path d="M3 5h18" />
+      <path d="M21 3v4" />
+    </svg>
+  {% when 'star' %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: {{ icon_size_px }}; height: {{ icon_size_px }}; display: inline-block; vertical-align: middle; flex-shrink: 0;">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M8 4h11a1 1 0 0 1 1 1v5a1 1 0 0 1 -1 1h-4m-3.713 .299a1 1 0 0 0 -.287 .701v7a1 1 0 0 1 -1 1h-5a1 1 0 0 1 -1 -1v-14c0 -.284 .118 -.54 .308 -.722" />
+      <path d="M4 8h2" />
+      <path d="M4 12h3" />
+      <path d="M4 16h2" />
+      <path d="M12 4v3" />
+      <path d="M16 4v2" />
+      <path d="M3 3l18 18" />
+    </svg>
+  {% when 'ruler' %}
+    <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: {{ icon_size_px }}; height: {{ icon_size_px }}; display: inline-block; vertical-align: middle; flex-shrink: 0;">
+      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+    </svg>
+  {% when 'default' %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 2001 2002" fill="currentColor" style="width: {{ icon_size_px }}; height: {{ icon_size_px }}; display: inline-block; vertical-align: middle; flex-shrink: 0;">
+      <path fill-rule="nonzero" d="M 462.539062 857.351562 C 462.539062 993.589844 621.363281 1104.410156 816.578125 1104.410156 C 1011.789062 1104.410156 1170.609375 993.589844 1170.609375 857.351562 C 1170.609375 721.109375 1011.789062 610.289062 816.578125 610.289062 C 621.363281 610.289062 462.539062 721.109375 462.539062 857.351562 Z M 412.9375 857.351562 C 412.9375 693.769531 594.007812 560.679688 816.578125 560.679688 C 1039.140625 560.679688 1220.21875 693.769531 1220.21875 857.351562 C 1220.21875 1020.933594 1039.140625 1154.019531 816.578125 1154.019531 C 594.007812 1154.019531 412.9375 1020.933594 412.9375 857.351562 "/>
+      <path fill-rule="nonzero" d="M 692.957031 857.351562 C 692.957031 901.660156 749.570312 939.058594 816.578125 939.058594 C 883.582031 939.058594 940.195312 901.660156 940.195312 857.351562 C 940.195312 813.039062 883.582031 775.640625 816.578125 775.640625 C 749.570312 775.640625 692.957031 813.039062 692.957031 857.351562 Z M 643.355469 857.351562 C 643.355469 784.921875 721.058594 726.03125 816.578125 726.03125 C 912.09375 726.03125 989.800781 784.921875 989.800781 857.351562 C 989.800781 929.78125 912.09375 988.671875 816.578125 988.671875 C 721.058594 988.671875 643.355469 929.78125 643.355469 857.351562 "/>
+      <path fill-rule="nonzero" d="M 828.070312 1441.136719 L 1545.738281 1441.136719 C 1568.53125 1441.136719 1587.070312 1422.628906 1587.070312 1399.8125 L 1587.070312 1145.789062 C 1587.070312 1122.972656 1568.53125 1104.410156 1545.738281 1104.410156 L 830.765625 1104.410156 C 817.070312 1104.410156 805.960938 1115.515625 805.960938 1129.214844 C 805.960938 1142.914062 817.070312 1154.019531 830.765625 1154.019531 L 1537.46875 1154.019531 L 1537.46875 1391.523438 L 828.070312 1391.523438 C 790.660156 1391.523438 462.539062 1384.398438 462.539062 1137.503906 L 462.539062 889.78125 C 462.539062 876.078125 451.4375 864.96875 437.742188 864.96875 C 424.042969 864.96875 412.9375 876.078125 412.9375 889.78125 L 412.9375 1137.503906 C 412.9375 1361.636719 636.566406 1441.136719 828.070312 1441.136719 "/>
+      <path fill-rule="nonzero" d="M 1402.101562 1441.136719 C 1415.800781 1441.136719 1426.910156 1430.03125 1426.910156 1416.328125 L 1426.910156 1129.601562 C 1426.910156 1115.902344 1415.800781 1104.796875 1402.101562 1104.796875 C 1388.398438 1104.796875 1377.300781 1115.902344 1377.300781 1129.601562 L 1377.300781 1416.328125 C 1377.300781 1430.03125 1388.398438 1441.136719 1402.101562 1441.136719 "/>
+      <path fill-rule="nonzero" d="M 1194.601562 1141.257812 C 1208.300781 1141.257812 1219.410156 1130.15625 1219.410156 1116.453125 L 1219.410156 866.078125 C 1219.410156 852.378906 1208.300781 841.269531 1194.601562 841.269531 C 1180.898438 841.269531 1169.800781 852.378906 1169.800781 866.078125 L 1169.800781 1116.453125 C 1169.800781 1130.15625 1180.898438 1141.257812 1194.601562 1141.257812 "/>
+      <path fill-rule="nonzero" d="M 1119.691406 1433.898438 C 1133.378906 1433.898438 1144.488281 1422.792969 1144.488281 1409.09375 L 1144.488281 1331.527344 C 1144.488281 1317.824219 1133.378906 1306.722656 1119.691406 1306.722656 C 1105.988281 1306.722656 1094.878906 1317.824219 1094.878906 1331.527344 L 1094.878906 1409.09375 C 1094.878906 1422.792969 1105.988281 1433.898438 1119.691406 1433.898438 "/>
+      <path fill-rule="nonzero" d="M 1260.789062 1433.898438 C 1274.488281 1433.898438 1285.589844 1422.792969 1285.589844 1409.09375 L 1285.589844 1272.800781 C 1285.589844 1259.097656 1274.488281 1247.996094 1260.789062 1247.996094 C 1247.089844 1247.996094 1235.980469 1259.097656 1235.980469 1272.800781 L 1235.980469 1409.09375 C 1235.980469 1422.792969 1247.089844 1433.898438 1260.789062 1433.898438 "/>
+      <path fill-rule="nonzero" d="M 841.140625 1433.898438 C 854.839844 1433.898438 865.945312 1422.792969 865.945312 1409.09375 L 865.945312 1331.527344 C 865.945312 1317.824219 854.839844 1306.722656 841.140625 1306.722656 C 827.441406 1306.722656 816.335938 1317.824219 816.335938 1331.527344 L 816.335938 1409.09375 C 816.335938 1422.792969 827.441406 1433.898438 841.140625 1433.898438 "/>
+      <path fill-rule="nonzero" d="M 982.238281 1433.898438 C 995.941406 1433.898438 1007.039062 1422.792969 1007.039062 1409.09375 L 1007.039062 1272.800781 C 1007.039062 1259.097656 995.941406 1247.996094 982.238281 1247.996094 C 968.546875 1247.996094 957.441406 1259.097656 957.441406 1272.800781 L 957.441406 1409.09375 C 957.441406 1422.792969 968.546875 1433.898438 982.238281 1433.898438 "/>
+      <path fill-rule="nonzero" d="M 700.105469 1406.496094 C 713.808594 1406.496094 724.914062 1395.390625 724.914062 1381.691406 L 724.914062 1272.800781 C 724.914062 1259.097656 713.808594 1247.996094 700.105469 1247.996094 C 686.414062 1247.996094 675.308594 1259.097656 675.308594 1272.800781 L 675.308594 1381.691406 C 675.308594 1395.390625 686.414062 1406.496094 700.105469 1406.496094 "/>
+      <path fill-rule="nonzero" d="M 1452.351562 1275.730469 C 1452.351562 1259.042969 1465.941406 1245.453125 1482.660156 1245.453125 C 1499.371094 1245.453125 1512.960938 1259.042969 1512.960938 1275.730469 C 1512.960938 1292.46875 1499.371094 1306.058594 1482.660156 1306.058594 C 1465.941406 1306.058594 1452.351562 1292.46875 1452.351562 1275.730469 "/>
+    </svg>
+{% endcase %}
+
